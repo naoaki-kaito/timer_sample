@@ -95,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         if (_seconds <= 0) {
           //完了ダイアログを表示
-
+          _showFinishedDialog();
 
           //カウントを止める
           _timer.cancel();
@@ -106,6 +106,27 @@ class _MyHomePageState extends State<MyHomePage> {
       //カウントを止める
       _timer.cancel();
     }
+  }
+
+  //完了ダイアログを表示
+  void _showFinishedDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('タイマー終了'),
+          content: Text('完了しました'),
+          actions: <Widget>[
+            RaisedButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            )
+          ],
+        );
+      }
+    );
   }
 
 }
