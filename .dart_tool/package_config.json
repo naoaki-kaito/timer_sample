@@ -173,10 +173,10 @@
       "name": "timer_sample",
       "rootUri": "../",
       "packageUri": "lib/",
-      "languageVersion": "2.1"
+      "languageVersion": "2.3"
     }
   ],
-  "generated": "2020-05-07T03:31:31.372896Z",
+  "generated": "2020-05-07T11:11:27.227990Z",
   "generator": "pub",
   "generatorVersion": "2.7.2"
 }
