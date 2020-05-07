@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 
 void main() => runApp(MyApp());
 
@@ -43,12 +44,23 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
         children: <Widget>[
           Expanded(
-            child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
                 //現在のカウントを表示
-                child: Text(_seconds.toString(),
+                Text(_seconds.toString(),
                   style: TextStyle(fontSize: 100),
+                ),
+                //編集ボタン
+                RaisedButton(
+                  child: Text('EDIT'),
+                  onPressed: () {
+                    _showEditDialog();
+                  },
                 )
-            ),
+
+              ],
+            )
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +79,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   child: Text('RESET'),
                   onPressed: () {
                     setState(() {
-                      _seconds = _defaultSeconds;
+                      _reset();
                     });
                   },
                 )
@@ -106,6 +118,53 @@ class _MyHomePageState extends State<MyHomePage> {
       //カウントを止める
       _timer.cancel();
     }
+  }
+
+  // リセット処理
+  void _reset() {
+    _seconds = _defaultSeconds;
+  }
+
+  //編集ダイアログを開く
+  void _showEditDialog() {
+
+    int newSeconds = 0;
+
+    showDialog(
+      context: context,
+        builder: (context) {
+          return Dialog(
+            child: Container(
+              height: 400,
+              child: Column(
+                children: <Widget>[
+                  //時間設定のドラム
+                  CupertinoTimerPicker(
+                    initialTimerDuration: Duration(seconds: _defaultSeconds),
+                    mode: CupertinoTimerPickerMode.ms,
+                    onTimerDurationChanged: (Duration duration) {
+                      newSeconds = duration.inSeconds;
+                    },
+                  ),
+
+                  //決定ボタン
+                  RaisedButton(
+                    child: Text('SAVE'),
+                    onPressed: () {
+                      setState(() {
+                        _defaultSeconds = newSeconds;
+                        _reset();
+                      });
+                      Navigator.pop(context);
+                    },
+                  )
+
+                ],
+              ),
+            ),
+          );
+        }
+    );
   }
 
   //完了ダイアログを表示
