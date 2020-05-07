@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -26,7 +27,11 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  //https://github.com/naoaki-kaito/timer_sample
+
   static bool _isCounting = false;
+  static int _defaultSeconds = 5;
+  static int _seconds = _defaultSeconds;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +43,12 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
         children: <Widget>[
           Expanded(
-            child: Container(color: Colors.green,),
+            child: Center(
+                //現在のカウントを表示
+                child: Text(_seconds.toString(),
+                  style: TextStyle(fontSize: 100),
+                )
+            ),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -47,9 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               RaisedButton(
                 child: Text(_isCounting ? 'STOP' : 'START'),
                 onPressed: () {
-                  setState(() {
-                    _isCounting = !_isCounting;
-                  });
+                  _handleTimer();
                 },
               ),
               Container(width: 30),
@@ -58,7 +66,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 RaisedButton(
                   child: Text('RESET'),
                   onPressed: () {
-                    print('RESET!!!!!');
+                    setState(() {
+                      _seconds = _defaultSeconds;
+                    });
                   },
                 )
             ],
@@ -67,4 +77,35 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     ));
   }
+
+  Timer _timer;
+
+  // START, STOP の処理
+  void _handleTimer() {
+    setState(() {
+      _isCounting = !_isCounting;
+    });
+
+    if (_isCounting) {
+      //1秒ごとにカウントダウンする
+      _timer = Timer.periodic(Duration(seconds: 1), (_) {
+        setState(() {
+          _seconds--;
+        });
+
+        if (_seconds <= 0) {
+          //完了ダイアログを表示
+
+
+          //カウントを止める
+          _timer.cancel();
+        }
+      });
+    //STOPの場合
+    } else {
+      //カウントを止める
+      _timer.cancel();
+    }
+  }
+
 }
